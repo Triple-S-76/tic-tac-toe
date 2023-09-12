@@ -3,18 +3,21 @@ class TicTacToe
   attr_accessor :player1, :player2, :player1_boxes, :player2_boxes, :board, :current_player, :random_questions
 
   def initialize
-    start_game
     @board = create_board
-    set_player_names
     @player1_boxes = []
     @player2_boxes = []
     set_random_questions
+  end
+
+  def start_game
+    would_you_like_to_play
+    set_player_names
     play_game
   end
 
   private
 
-  def start_game
+  def would_you_like_to_play
     3.times { puts }
     puts 'Would you like to play Tic Tac Toe?'
     puts 'Yes or No'
@@ -24,7 +27,6 @@ class TicTacToe
       puts 'OK then, good-bye'
       exit
     end
-
   end
 
   def play_game
@@ -259,4 +261,5 @@ class TicTacToe
   end
 end
 
-TicTacToe.new
+my_game = TicTacToe.new
+my_game.start_game
