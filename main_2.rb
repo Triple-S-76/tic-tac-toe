@@ -259,4 +259,4 @@ class TicTacToe
   end
 end
 
-Tic_tac_toe.new
+TicTacToe.new
