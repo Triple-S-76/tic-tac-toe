@@ -1,48 +1,72 @@
+require 'pry-byebug'
 
 class TicTacToe
-  attr_accessor :player1, :player2, :player1_boxes, :player2_boxes, :board, :current_player, :random_questions
+  attr_accessor :player1, :player2, :player1_boxes, :player2_boxes, :board, :current_player, :random_questions, :game_over
 
   def initialize
     @board = create_board
     @player1_boxes = []
     @player2_boxes = []
+    @game_over = false
     set_random_questions
   end
 
   def start_game
-    would_you_like_to_play
+    answer = would_you_like_to_play
+    return unless answer == 'play game'
+
     set_player_names
-    play_game
+    game_loop
   end
 
-  private
-
-  def would_you_like_to_play
-    3.times { puts }
-    puts 'Would you like to play Tic Tac Toe?'
-    puts 'Yes or No'
-    answer = gets.chomp.downcase
-
-    unless answer == 'yes' || answer == 'y'
-      puts 'OK then, good-bye'
-      exit
-    end
-  end
-
-  def play_game
+  def game_loop
     loop do
       system('clear')
-      @current_player = @current_player == player1 ? player2 : player1
-      3.times { puts }
+      set_current_player
       print_board(board)
-      3.times { puts }
       current_move = ask_player
       update_board(current_move)
       update_player_boxes(current_move)
 
       check_for_winner
+      break if @game_over == true
+
       draw_game if @player1_boxes.length + @player2_boxes.length == 9
     end
+  end
+
+  private
+
+  def times_puts(num)
+    num.times { puts }
+  end
+
+  def would_you_like_to_play
+    times_puts(3)
+    puts 'Would you like to play Tic Tac Toe?'
+    puts 'Yes or No'
+    answer = gets.chomp.downcase
+
+    play_game = %w(yes y)
+    if play_game.include?(answer)
+      'play game'
+    else
+      puts 'OK then, good-bye'
+      'end game'
+    end
+  end
+
+  def set_player_names
+    puts
+    puts 'Enter Player 1 Name'
+    @player1 = gets.chomp
+    puts
+    puts 'Enter Player 2 Name'
+    @player2 = gets.chomp
+  end
+
+  def set_current_player
+    @current_player = @current_player == player1 ? player2 : player1
   end
 
   def update_player_boxes(current_move)
@@ -81,8 +105,8 @@ class TicTacToe
   def ask_player
     valid = false
     until valid == true
-      current_question = random_questions.sample[0]
-      puts "#{current_question} #{current_player}"
+      current_question = random_questions.sample
+      puts "#{current_question[0]} #{current_player}"
       current_move = gets.chomp.to_i
       valid = check_if_valid(current_move)
     end
@@ -131,15 +155,6 @@ class TicTacToe
     random_question_array.each { |question| @random_questions << question }
   end
 
-  def set_player_names
-    puts
-    puts 'Enter Player 1 Name'
-    @player1 = gets.chomp
-    puts
-    puts 'Enter Player 2 Name'
-    @player2 = gets.chomp
-  end
-
   def create_board
     board = []
     number = 1
@@ -155,10 +170,12 @@ class TicTacToe
   end
 
   def print_board(board)
+    times_puts(3)
     array_to_print_board = []
     fill_board(board, array_to_print_board)
     puts array_to_print_board
     puts '           |       |'
+    times_puts(3)
   end
 
   def fill_board(board, array_to_print_board)
@@ -242,22 +259,18 @@ class TicTacToe
 
   def draw_game
     system('clear')
-    3.times { puts }
     print_board(board)
-    3.times { puts }
     puts 'The game has ended in a draw. Too bad!'
-    3.times { puts }
-    exit
+    times_puts(3)
+    @game_over = true
   end
 
   def we_have_a_winner
     system('clear')
-    3.times { puts }
     print_board(board)
-    3.times { puts }
     puts "We have a winner! Congrats #{current_player}"
-    3.times { puts }
-    exit
+    times_puts(3)
+    @game_over = true
   end
 end
 
