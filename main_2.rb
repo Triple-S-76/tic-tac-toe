@@ -29,9 +29,10 @@ class TicTacToe
       update_player_boxes(current_move)
 
       check_for_winner
-      break if @game_over == true
+      break if @game_over
 
       draw_game if @player1_boxes.length + @player2_boxes.length == 9
+      break if @game_over
     end
   end
 
@@ -274,5 +275,7 @@ class TicTacToe
   end
 end
 
-my_game = TicTacToe.new
-my_game.start_game
+if $PROGRAM_NAME == __FILE__
+  my_game = TicTacToe.new
+  my_game.start_game
+end

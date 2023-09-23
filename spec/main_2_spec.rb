@@ -89,10 +89,9 @@ describe TicTacToe do
         allow(subject).to receive(:ask_player)
         allow(subject).to receive(:update_board)
         allow(subject).to receive(:update_player_boxes)
-        subject.game_over = true
         subject.player1_boxes = [5, 1, 6, 8, 7]
         subject.player2_boxes = [3, 9, 4, 2]
-        subject.board = [%w(x x o), %w(o x x), %w(x o o)]
+        subject.board = [%w[x x o], %w[o x x], %w[x o o]]
       end
 
       it 'checks the output of #print_board with a full board' do
